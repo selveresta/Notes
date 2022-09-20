@@ -1,41 +1,15 @@
-const button = document.getElementById("button");
-const notes = document.getElementById("notes");
-const table = document.getElementById("table");
-const archive = document.getElementById("archive");
-const tablecategory = document.getElementById("categoryTable");
-
-let notesArray = [
-	{
-		name: "asdasd",
-		created: "1.1.1",
-		category: "Idea",
-		content: "asdasdasd",
-		dates: [],
-		active: true,
-	},
-	{
-		name: "asdasd",
-		created: "1.1.1",
-		category: "Task",
-		content: "asdasdasd",
-		dates: [],
-		active: true,
-	},
-	{
-		name: "asdasd",
-		created: "1.1.1",
-		category: "Task",
-		content: "asdasdasd",
-		dates: [],
-		active: true,
-	},
-];
-
-let archiveArray = [];
-
-const typeCategoties = ["Task", "Random Thought", "Idea"];
-const headerNames = ["Name", "Created", "Category", "Content", "Dates"];
-const categortTableNames = ["Note Category", "Active", "Archived"];
+import {
+	button,
+	notes,
+	table,
+	archive,
+	tablecategory,
+	notesArray,
+	archiveArray,
+	typeCategoties,
+	headerNames,
+	categortTableNames,
+} from "./UIElement.js";
 
 button.addEventListener("click", () => {
 	let note = {
@@ -275,9 +249,6 @@ const createTableofCategories = () => {
 
 	let activeRandom = 0;
 	let acrhiveRandom = 0;
-
-	console.log(notesArray.length);
-	console.log(archiveArray.length);
 
 	if (notesArray.length == 0) {
 		archiveArray.forEach((note) => {
