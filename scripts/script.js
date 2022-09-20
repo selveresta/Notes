@@ -8,7 +8,7 @@ let notesArray = [
 	{
 		name: "asdasd",
 		created: "1.1.1",
-		category: "Task",
+		category: "Idea",
 		content: "asdasdasd",
 		dates: [],
 		active: true,
@@ -87,10 +87,33 @@ const createTableOfNotes = () => {
 
 	let rowHeader = document.createElement("tr");
 	headerNames.forEach((one) => {
-		var cell = document.createElement("th");
+		let cell = document.createElement("th");
 		cell.appendChild(document.createTextNode(one));
 		rowHeader.appendChild(cell);
 	});
+
+	let cellBtn = document.createElement("th");
+	let btnAllArchive = document.createElement("button");
+	btnAllArchive.innerText = "A";
+	btnAllArchive.addEventListener("click", () => {
+		changeStatusAllNotes();
+		createTableofCategories();
+		moveAllToArchive();
+		createArchiveOfNotes();
+		createTableOfNotes();
+	});
+	let btnDeleteAll = document.createElement("button");
+	btnDeleteAll.innerText = "D";
+	btnDeleteAll.addEventListener("click", () => {
+		notesArray = [];
+		createTableOfNotes();
+		createTableofCategories();
+	});
+
+	cellBtn.appendChild(document.createElement("td").appendChild(btnAllArchive));
+	cellBtn.appendChild(document.createElement("td").appendChild(btnDeleteAll));
+
+	rowHeader.appendChild(cellBtn);
 
 	tableBody.appendChild(rowHeader);
 
@@ -103,17 +126,132 @@ const createTableOfNotes = () => {
 			}
 			const element = note[key];
 
-			var cell = document.createElement("td");
+			let cell = document.createElement("td");
 			if (element == null) {
 				cell.appendChild(document.createTextNode(""));
 			} else cell.appendChild(document.createTextNode(element));
 			row.appendChild(cell);
 		}
 
+		let cellBtn = document.createElement("td");
+		let btnEdit = document.createElement("button");
+		btnEdit.innerText = "E";
+		btnEdit.addEventListener("click", () => {
+			EditNote(note);
+			createTableOfNotes();
+		});
+		let btnArchive = document.createElement("button");
+		btnArchive.innerText = "A";
+		btnArchive.addEventListener("click", () => {
+			moveNoteToArchive(note);
+			createTableofCategories();
+			createTableOfNotes();
+			createArchiveOfNotes();
+		});
+		let btnDelete = document.createElement("button");
+		btnDelete.innerText = "D";
+		btnDelete.addEventListener("click", () => {
+			notesArray = arrayRemove(notesArray, note);
+			createTableOfNotes();
+			createTableofCategories();
+		});
+
+		cellBtn.appendChild(btnEdit);
+		cellBtn.appendChild(btnArchive);
+		cellBtn.appendChild(btnDelete);
+
+		row.appendChild(cellBtn);
+
 		tableBody.appendChild(row);
 	});
 
 	table.appendChild(tableBody);
+};
+
+const createArchiveOfNotes = () => {
+	clearArchive();
+	let tableBody = document.createElement("tbody");
+
+	let rowHeader = document.createElement("tr");
+	headerNames.forEach((one) => {
+		let cell = document.createElement("th");
+		cell.appendChild(document.createTextNode(one));
+		rowHeader.appendChild(cell);
+	});
+
+	let cellBtn = document.createElement("th");
+	let btnAllDeArchive = document.createElement("button");
+	btnAllDeArchive.innerText = "A";
+	btnAllDeArchive.addEventListener("click", () => {
+		changeStatusAllNotes();
+		createTableofCategories();
+		moveAllFromArchive();
+		createArchiveOfNotes();
+		createTableOfNotes();
+	});
+	let btnDeleteAllArchive = document.createElement("button");
+	btnDeleteAllArchive.innerText = "D";
+	btnDeleteAllArchive.addEventListener("click", () => {
+		archiveArray = [];
+		createArchiveOfNotes();
+		createTableofCategories();
+	});
+	cellBtn.appendChild(document.createElement("td").appendChild(btnAllDeArchive));
+	cellBtn.appendChild(document.createElement("td").appendChild(btnDeleteAllArchive));
+
+	rowHeader.appendChild(cellBtn);
+
+	tableBody.appendChild(rowHeader);
+
+	archiveArray.forEach((note) => {
+		let row = document.createElement("tr");
+
+		for (const key in note) {
+			if (key === "active") {
+				continue;
+			}
+			const element = note[key];
+
+			let cell = document.createElement("td");
+			if (element == null) {
+				cell.appendChild(document.createTextNode(""));
+			} else cell.appendChild(document.createTextNode(element));
+			row.appendChild(cell);
+		}
+
+		let cellBtn = document.createElement("td");
+		let btnEdit = document.createElement("button");
+		btnEdit.innerText = "E";
+		btnEdit.addEventListener("click", () => {
+			EditNote(note);
+			createArchiveOfNotes();
+		});
+		let btnDeArchive = document.createElement("button");
+		btnDeArchive.innerText = "A";
+		btnDeArchive.addEventListener("click", () => {
+			moveNoteFromArchive(note);
+			createTableOfNotes();
+			createArchiveOfNotes();
+			createTableofCategories();
+		});
+		let btnDelete = document.createElement("button");
+		btnDelete.innerText = "D";
+		btnDelete.addEventListener("click", () => {
+			archiveArray = arrayRemove(archiveArray, note);
+			createArchiveOfNotes();
+			createTableofCategories();
+		});
+
+		cellBtn.appendChild(btnEdit);
+		cellBtn.appendChild(btnDeArchive);
+		cellBtn.appendChild(btnDelete);
+
+		row.appendChild(cellBtn);
+
+		tableBody.appendChild(row);
+	});
+
+	archive.appendChild(tableBody);
 };
 
 const createTableofCategories = () => {
@@ -122,7 +260,7 @@ const createTableofCategories = () => {
 
 	let rowHeader = document.createElement("tr");
 	categortTableNames.forEach((one) => {
-		var cell = document.createElement("th");
+		let cell = document.createElement("th");
 		cell.appendChild(document.createTextNode(one));
 		rowHeader.appendChild(cell);
 	});
@@ -138,25 +276,70 @@ const createTableofCategories = () => {
 	let activeRandom = 0;
 	let acrhiveRandom = 0;
 
-	notesArray.forEach((note) => {
-		switch (note.category) {
-			case "Idea":
-				if (note.active) {
-					activeIdea++;
-				} else archiveIdea++;
-				break;
-			case "Task":
-				if (note.active) {
-					activeTask++;
-				} else archiveTask++;
-				break;
-			case "Random Thought":
-				if (note.active) {
-					activeRandom++;
-				} else acrhiveRandom++;
-				break;
-		}
-	});
+	console.log(notesArray.length);
+	console.log(archiveArray.length);
+
+	if (notesArray.length == 0) {
+		archiveArray.forEach((note) => {
+			switch (note.category) {
+				case "Idea":
+					if (note.active) {
+						activeIdea++;
+					} else archiveIdea++;
+					break;
+				case "Task":
+					if (note.active) {
+						activeTask++;
+					} else archiveTask++;
+					break;
+				case "Random Thought":
+					if (note.active) {
+						activeRandom++;
+					} else acrhiveRandom++;
+					break;
+			}
+		});
+	} else if (archiveArray.length == 0) {
+		notesArray.forEach((note) => {
+			switch (note.category) {
+				case "Idea":
+					if (note.active) {
+						activeIdea++;
+					} else archiveIdea++;
+					break;
+				case "Task":
+					if (note.active) {
+						activeTask++;
+					} else archiveTask++;
+					break;
+				case "Random Thought":
+					if (note.active) {
+						activeRandom++;
+					} else acrhiveRandom++;
+					break;
+			}
+		});
+	} else {
+		notesArray.forEach((note) => {
+			switch (note.category) {
+				case "Idea":
+					if (note.active) {
+						activeIdea++;
+					} else archiveIdea++;
+					break;
+				case "Task":
+					if (note.active) {
+						activeTask++;
+					} else archiveTask++;
+					break;
+				case "Random Thought":
+					if (note.active) {
+						activeRandom++;
+					} else acrhiveRandom++;
+					break;
+			}
+		});
+	}
 
 	typeCategoties.forEach((category) => {
 		switch (category) {
@@ -210,6 +393,18 @@ const createTableofCategories = () => {
 	tablecategory.appendChild(tableBody);
 };
 
+function changeStatusAllNotes() {
+	if (notesArray.length == 0) {
+		archiveArray.forEach((note) => {
+			note.active = !note.active;
+		});
+	} else if (archiveArray.length == 0) {
+		notesArray.forEach((note) => {
+			note.active = !note.active;
+		});
+	}
+}
+
 const clearTable = () => {
 	while (table.children.length != 0) {
 		table.removeChild(table.lastElementChild);
@@ -222,5 +417,48 @@ const clearTableCategory = () => {
 	}
 };
 
+const clearArchive = () => {
+	while (archive.children.length != 0) {
+		archive.removeChild(archive.lastElementChild);
+	}
+};
+
+const moveAllToArchive = () => {
+	for (let i = 0; i < notesArray.length; i++) {
+		archiveArray.push(notesArray[i]);
+	}
+	notesArray = [];
+};
+
+function arrayRemove(arr, value) {
+	return arr.filter(function (ele) {
+		return ele != value;
+	});
+}
+
+const moveNoteToArchive = (note) => {
+	note.active = false;
+	archiveArray.push(note);
+	notesArray = arrayRemove(notesArray, note);
+};
+
+const moveNoteFromArchive = (note) => {
+	note.active = true;
+	notesArray.push(note);
+	archiveArray = arrayRemove(archiveArray, note);
+};
+
+const moveAllFromArchive = () => {
+	for (let i = 0; i < archiveArray.length; i++) {
+		notesArray.push(archiveArray[i]);
+	}
+	archiveArray = [];
+};
+
+const EditNote = (note) => {
+	note.content = prompt("Enter new content", "");
+};
+
 createTableOfNotes();
 createTableofCategories();
+createArchiveOfNotes();
