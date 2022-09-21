@@ -12,6 +12,7 @@ export const generateNote = () => {
 			category: type.options[type.selectedIndex].text,
 			content: content.value,
 			dates: getDatesFromString(content.value),
+			active: true,
 		};
 	}
 };

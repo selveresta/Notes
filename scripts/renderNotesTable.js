@@ -1,7 +1,13 @@
+import { archiveArray, clearNotesArray, deleteNote, notesArray } from "./arrays.js";
+import { MoveAllToArchive, moveNoteToArchive } from "./moving.js";
+import { reRender } from "./script.js";
+import { getDatesFromString } from "./string.js";
+
 const table = document.getElementById("table");
 
 export function renderNotesTable(array, headerNames) {
 	clearTable();
+
 	let tableBody = document.createElement("tbody");
 
 	let rowHeader = document.createElement("tr");
@@ -18,7 +24,6 @@ export function renderNotesTable(array, headerNames) {
 
 	array.forEach((note) => {
 		let row = document.createElement("tr");
-
 		switch (note.category) {
 			case "Task":
 				let cell1 = document.createElement("td");
@@ -57,7 +62,7 @@ export function renderNotesTable(array, headerNames) {
 			} else cell.appendChild(document.createTextNode(element));
 			row.appendChild(cell);
 		}
-		createBtnsActionOfNote(row);
+		createBtnsActionOfNote(row, note);
 		tableBody.appendChild(row);
 	});
 
@@ -70,12 +75,18 @@ const createHeaderBtnActions = (rowHeader) => {
 	let btnAllArchive = document.createElement("button");
 	btnAllArchive.innerHTML = `<img src="../icons/archive.png" style="width:15px;height:15px;" />`;
 	btnAllArchive.style.margin = "5px";
-	btnAllArchive.addEventListener("click", () => {});
+	btnAllArchive.addEventListener("click", () => {
+		MoveAllToArchive(notesArray, archiveArray, clearNotesArray);
+		reRender();
+	});
 
 	let btnDeleteAll = document.createElement("button");
 	btnDeleteAll.innerHTML = `<img src="../icons/delete.png" style="width:15px;height:15px;" />`;
 	btnDeleteAll.style.margin = "5px";
-	btnDeleteAll.addEventListener("click", () => {});
+	btnDeleteAll.addEventListener("click", () => {
+		clearNotesArray();
+		reRender();
+	});
 
 	cellBtn.appendChild(document.createElement("td").appendChild(btnAllArchive));
 	cellBtn.appendChild(document.createElement("td").appendChild(btnDeleteAll));
@@ -83,26 +94,67 @@ const createHeaderBtnActions = (rowHeader) => {
 	rowHeader.appendChild(cellBtn);
 };
 
-const createBtnsActionOfNote = (row) => {
+const createBtnsActionOfNote = (row, note) => {
 	let cellBtn = document.createElement("td");
 
 	let btnEdit = document.createElement("button");
 	btnEdit.innerHTML = `<img src="../icons/edit.png" style="width:15px;height:15px;" />`;
 	btnEdit.style.margin = "5px";
+	btnEdit.setAttribute("data-bs-toggle", "modal");
+	btnEdit.setAttribute("data-bs-target", "#EditModal");
+	btnEdit.myParam = note;
+	btnEdit.addEventListener("click", (e) => {
+		let btnSave = document.getElementById("SaveNoteBtn");
+		btnSave.myParam = note;
 
-	btnEdit.addEventListener("click", () => {});
+		let editName = document.getElementById("EditInputName");
+		let editCategory = document.getElementById("EditSelectType");
+		let editContent = document.getElementById("EditContent");
+
+		btnSave.addEventListener("click", (e) => {
+			console.log(e);
+			console.log(e.currentTarget.myParam);
+			let tmpNote = e.currentTarget.myParam;
+			tmpNote.name = editName.value;
+			tmpNote.category = editCategory.options[editCategory.selectedIndex].text;
+			tmpNote.content = editContent.value;
+			tmpNote.dates = getDatesFromString(editContent.value);
+			reRender();
+		});
+
+		editName.value = note.name;
+		switch (note.type) {
+			case "Task":
+				editCategory.selectedIndex = 0;
+				break;
+			case "Idea":
+				editCategory.selectedIndex = 1;
+				break;
+			case "Random Thought":
+				editCategory.selectedIndex = 2;
+				break;
+		}
+		editContent.value = note.content;
+	});
 
 	let btnArchive = document.createElement("button");
 	btnArchive.innerHTML = `<img src="../icons/archive.png" style="width:15px;height:15px;" />`;
 	btnArchive.style.margin = "5px";
 
-	btnArchive.addEventListener("click", () => {});
+	btnArchive.addEventListener("click", () => {
+		moveNoteToArchive(note, archiveArray);
+		deleteNote(note);
+		reRender();
+	});
 
 	let btnDelete = document.createElement("button");
 	btnDelete.innerHTML = `<img src="../icons/delete.png" style="width:15px;height:15px;" />`;
 	btnDelete.style.margin = "5px";
 
-	btnDelete.addEventListener("click", () => {});
+	btnDelete.addEventListener("click", () => {
+		deleteNote(note);
+		reRender();
+	});
 
 	cellBtn.appendChild(btnEdit);
 	cellBtn.appendChild(btnArchive);

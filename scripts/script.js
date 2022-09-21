@@ -3,58 +3,37 @@ import { renderArchiveTable } from "./renderArchiveTable.js";
 import { renderCategoryTable } from "./renderCategoryTable.js";
 import { renderNotesTable } from "./renderNotesTable.js";
 
-import {
-	button,
-	notes,
-	table,
-	archive,
-	tablecategory,
-	//notesArray,
-	archiveArray,
-	typeCategoties,
-	//headerNames,
-	categortTableNames,
-} from "./UIElement.js";
+// import {
+// 	button,
+// 	notes,
+// 	table,
+// 	archive,
+// 	tablecategory,
+// 	//notesArray,
+// 	archiveArray,
+// 	typeCategoties,
+// 	//headerNames,
+// 	//categoryTableNames,
+// } from "./UIElement.js";
 
+import { notesArray, archiveArray, headerNames, categoryTableNames } from "./arrays.js";
 const createNote = document.getElementById("createNoteBtn");
+
+//
 
 createNote.onclick = () => {
 	if (generateNote() !== undefined) {
 		notesArray.push(generateNote());
 	}
 	renderNotesTable(notesArray, headerNames);
-	console.log(notesArray);
+	renderCategoryTable(notesArray, archiveArray, categoryTableNames);
 };
 
-export const headerNames = ["", "Name", "Created", "Category", "Content", "Dates"];
-export const categoryTableNames = ["Note Category", "Active", "Archived"];
-
-export let notesArray = [
-	{
-		name: "asdasd",
-		dateCreated: "1.1.1",
-		category: "Idea",
-		content: "asdasdasd",
-		dates: [],
-		active: true,
-	},
-	{
-		name: "asdasd",
-		dateCreated: "1.1.1",
-		category: "Task",
-		content: "asdasdasd",
-		dates: [],
-		active: true,
-	},
-	{
-		name: "asdasd",
-		dateCreated: "1.1.1",
-		category: "Task",
-		content: "asdasdasd",
-		dates: [],
-		active: true,
-	},
-];
+export const reRender = () => {
+	renderNotesTable(notesArray, headerNames);
+	renderArchiveTable(archiveArray, headerNames);
+	renderCategoryTable(notesArray, archiveArray, categoryTableNames);
+};
 
 // button.addEventListener("click", () => {
 // 	notesArray.push(generateNote(note));
@@ -466,8 +445,4 @@ const EditNote = (note) => {
 	note.content = prompt("Enter new content", "");
 };
 
-renderNotesTable(notesArray, headerNames);
-renderArchiveTable(archiveArray, headerNames);
-renderCategoryTable(notesArray, archiveArray, categoryTableNames);
-//createTableofCategories();
-//createArchiveOfNotes();
+reRender();

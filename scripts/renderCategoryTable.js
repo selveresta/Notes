@@ -2,6 +2,7 @@ const tablecategory = document.getElementById("categoryTable");
 
 export function renderCategoryTable(notesArray, archiveArray, headerNames) {
 	clearTableCategory();
+
 	const typeCategoties = ["Task", "Random Thought", "Idea"];
 	let tableBody = document.createElement("tbody");
 

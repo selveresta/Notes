@@ -25,7 +25,7 @@
                           <input type="email" class="form-control" id="inputName" aria-describedby="emailHelp">
                         </div>
                         <div class="mb-3">
-                          <label for="selectType" class="form-label">Password</label>
+                          <label for="selectType" class="form-label">Category</label>
                           <select class="form-select" aria-label="Choose type" id="selectType">
                             
                             <option value="1">Task</option>
@@ -34,6 +34,7 @@
                           </select>
                         </div>
                         <div class="form-floating">
+
                             <textarea class="form-control" id="content" placeholder="Leave a content here" id="floatingTextarea"></textarea>
                             <label for="floatingTextarea">Content</label>
                           </div>
@@ -42,6 +43,46 @@
                 </div>
                 <div class="modal-footer">
                   <button id="createNoteBtn" type="button" class="btn btn-primary">Create</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+
+          <div class="modal fade" id="EditModal" tabindex="-1" aria-labelledby="EditModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="EditModalLabel">Create New Note</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form onsubmit="">
+                        <div class="mb-3">
+                          <labelame for="inputName" class="form-label">Name</label>
+                          <input type="email" class="form-control" id="EditInputName" aria-describedby="emailHelp">
+                        </div>
+                        <div class="mb-3">
+                          <label for="selectType" class="form-label">Category</label>
+                          <select class="form-select" aria-label="Choose type" id="EditSelectType">
+                            
+                            <option value="1">Task</option>
+                            <option value="2">Idea</option>
+                            <option value="3">Random Thought</option>
+                          </select>
+                        </div>
+                        <div class="form-floating">
+
+                            <textarea class="form-control" id="EditContent" placeholder="Leave a content here" id="floatingTextarea"></textarea>
+                            <label for="floatingTextarea">Content</label>
+                          </div>
+                        
+                      </form>
+                </div>
+                <div class="modal-footer">
+                  <button id="SaveNoteBtn" type="button" class="btn btn-primary">Save</button>
                 </div>
               </div>
             </div>
