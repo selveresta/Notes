@@ -3,6 +3,9 @@
 	padding: 15px;
 	margin: 15px;
 }
+button {
+	border: 0px;
+}
 
 table {
 	font-family: arial, sans-serif;
